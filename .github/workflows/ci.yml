@@ -89,6 +89,11 @@ jobs:
           poetry self add "poetry-dynamic-versioning[plugin]"
           poetry install
 
+      - name: Setup Git
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+
       - run: poetry run pytest --cov=foxops_client
         env:
           COVERAGE_FILE: .coverage.${{ matrix.python-version }}
