@@ -30,4 +30,4 @@ jobs:
       - name: Publish package
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         run: |
-          poetry publish -u __token__ -p ${{ secrets.PYPI_TOKEN }}
+          poetry publish -u __token__ -p ${{ secrets.PYPI_API_TOKEN }}
