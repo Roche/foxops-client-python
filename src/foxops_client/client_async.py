@@ -4,25 +4,16 @@ from typing import Any, Tuple
 import httpx
 from httpx import Response
 
+from foxops_client.exceptions import (
+    AuthenticationError,
+    FoxopsApiError,
+    IncarnationDoesNotExistError,
+)
 from foxops_client.retries import default_retry
 from foxops_client.types import Incarnation, IncarnationWithDetails
 
 
-class AuthenticationError(Exception):
-    pass
-
-
-class FoxOpsApiError(Exception):
-    def __init__(self, message: str):
-        super().__init__()
-        self.message = message
-
-
-class IncarnationDoesNotExistError(FoxOpsApiError):
-    pass
-
-
-class FoxOpsClient:
+class AsyncFoxopsClient:
     """
     This class can be used to call the FoxOps API.
 
@@ -34,10 +25,9 @@ class FoxOpsClient:
 
     def __init__(self, base_url: str, token: str):
         self.retry_function = default_retry()
-
         self.log: logging.Logger = logging.getLogger(self.__class__.__name__)
 
-        self.client = httpx.Client(
+        self.client = httpx.AsyncClient(
             base_url=base_url,
             headers={"Authorization": f"Bearer {token}"},
             verify=True,
@@ -55,16 +45,16 @@ class FoxOpsClient:
 
         resp.raise_for_status()
 
-    def verify_token(self):
-        response = self.retry_function(self.client.get)("/auth/test")
+    async def verify_token(self):
+        resp = await self.retry_function(self.client.get)("/auth/test")
 
-        if response.status_code == httpx.codes.OK:
+        if resp.status_code == httpx.codes.OK:
             return
 
-        self._handle_unexpected_response(response)
+        self._handle_unexpected_response(resp)
         raise ValueError("unexpected response")
 
-    def list_incarnations(
+    async def list_incarnations(
         self, incarnation_repository: str | None = None, target_directory: str | None = None
     ) -> list[Incarnation]:
         params = {}
@@ -73,7 +63,7 @@ class FoxOpsClient:
         if target_directory is not None:
             params["target_directory"] = target_directory
 
-        resp = self.retry_function(self.client.get)("/api/incarnations", params=params)
+        resp = await self.retry_function(self.client.get)("/api/incarnations", params=params)
 
         match resp.status_code:
             case httpx.codes.OK:
@@ -84,8 +74,8 @@ class FoxOpsClient:
         self._handle_unexpected_response(resp)
         raise ValueError("unexpected response")
 
-    def get_incarnation(self, incarnation_id: int) -> IncarnationWithDetails:
-        resp = self.retry_function(self.client.get)(f"/api/incarnations/{incarnation_id}")
+    async def get_incarnation(self, incarnation_id: int) -> IncarnationWithDetails:
+        resp = await self.retry_function(self.client.get)(f"/api/incarnations/{incarnation_id}")
 
         match resp.status_code:
             case httpx.codes.OK:
@@ -96,8 +86,8 @@ class FoxOpsClient:
         self._handle_unexpected_response(resp)
         raise ValueError("unexpected response")
 
-    def delete_incarnation(self, incarnation_id: int):
-        resp = self.retry_function(self.client.delete)(f"/api/incarnations/{incarnation_id}")
+    async def delete_incarnation(self, incarnation_id: int):
+        resp = await self.retry_function(self.client.delete)(f"/api/incarnations/{incarnation_id}")
 
         match resp.status_code:
             case httpx.codes.NO_CONTENT:
@@ -108,7 +98,7 @@ class FoxOpsClient:
         self._handle_unexpected_response(resp)
         raise ValueError("unexpected response")
 
-    def update_incarnation(
+    async def update_incarnation(
         self,
         incarnation_id: int,
         automerge: bool,
@@ -123,7 +113,7 @@ class FoxOpsClient:
         if template_data is not None:
             data["template_data"] = template_data
 
-        resp = self.retry_function(self.client.put)(f"/api/incarnations/{incarnation_id}", json=data)
+        resp = await self.retry_function(self.client.put)(f"/api/incarnations/{incarnation_id}", json=data)
 
         match resp.status_code:
             case httpx.codes.OK:
@@ -132,12 +122,12 @@ class FoxOpsClient:
                 raise IncarnationDoesNotExistError(resp.json()["message"])
             case httpx.codes.BAD_REQUEST | httpx.codes.CONFLICT:
                 self.log.error(f"received error from FoxOps API: {resp.status_code} {resp.headers} {resp.text}")
-                raise FoxOpsApiError(resp.json()["message"])
+                raise FoxopsApiError(resp.json()["message"])
 
         self._handle_unexpected_response(resp)
         raise ValueError("unexpected response")
 
-    def create_incarnation(
+    async def create_incarnation(
         self,
         incarnation_repository: str,
         template_repository: str,
@@ -169,7 +159,7 @@ class FoxOpsClient:
         if allow_import is not None:
             params["allow_import"] = allow_import
 
-        resp = self.retry_function(self.client.post)("/api/incarnations", params=params, json=data)
+        resp = await self.retry_function(self.client.post)("/api/incarnations", params=params, json=data)
 
         match resp.status_code:
             case httpx.codes.OK:
@@ -178,7 +168,7 @@ class FoxOpsClient:
                 return False, IncarnationWithDetails(**resp.json())
             case httpx.codes.BAD_REQUEST:
                 self.log.error(f"received error from FoxOps API: {resp.status_code} {resp.headers} {resp.text}")
-                raise FoxOpsApiError(resp.json()["message"])
+                raise FoxopsApiError(resp.json()["message"])
 
         self._handle_unexpected_response(resp)
         raise ValueError("unexpected response")

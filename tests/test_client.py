@@ -1,16 +1,16 @@
 import pytest
 from pytest import fixture
 
-from foxops_client.client import (
+from foxops_client import (
     AuthenticationError,
-    FoxOpsApiError,
-    FoxOpsClient,
+    FoxopsApiError,
+    FoxopsClient,
     IncarnationDoesNotExistError,
+    MergeRequestStatus,
 )
-from foxops_client.types import MergeRequestStatus
 
 
-def test_verify_token(foxops_client: FoxOpsClient):
+def test_verify_token(foxops_client: FoxopsClient):
     foxops_client.verify_token()
 
 
@@ -19,7 +19,7 @@ def test_verify_token_raises_unauthenticated_exception_when_using_an_invalid_tok
         foxops_client_invalid_token.verify_token()
 
 
-def test_create_incarnation(gitlab_api_client, foxops_client: FoxOpsClient, template, gitlab_project_factory):
+def test_create_incarnation(gitlab_api_client, foxops_client: FoxopsClient, template, gitlab_project_factory):
     # GIVEN
     template_path = template
     incarnation_path = gitlab_project_factory(return_path=True)
@@ -42,7 +42,7 @@ def test_create_incarnation(gitlab_api_client, foxops_client: FoxOpsClient, temp
     assert incarnation.template_data == {"input_variable": "foo"}
 
 
-def test_create_incarnation_import_with_existing_incarnation(incarnation, foxops_client: FoxOpsClient):
+def test_create_incarnation_import_with_existing_incarnation(incarnation, foxops_client: FoxopsClient):
     # GIVEN
     foxops_client.delete_incarnation(incarnation.id)
 
@@ -66,7 +66,7 @@ def test_create_incarnation_import_with_existing_incarnation(incarnation, foxops
 
 def test_create_incarnation_with_conflicting_existing_incarnation(incarnation, foxops_client):
     # WHEN
-    with pytest.raises(FoxOpsApiError) as e:
+    with pytest.raises(FoxopsApiError) as e:
         foxops_client.create_incarnation(
             incarnation_repository=incarnation.incarnation_repository,
             template_repository=incarnation.template_repository,
@@ -78,7 +78,7 @@ def test_create_incarnation_with_conflicting_existing_incarnation(incarnation, f
     assert e.value.message.find("already initialized") != -1
 
 
-def test_delete_incarnation(incarnation, foxops_client: FoxOpsClient):
+def test_delete_incarnation(incarnation, foxops_client: FoxopsClient):
     # WHEN
     foxops_client.delete_incarnation(incarnation.id)
 

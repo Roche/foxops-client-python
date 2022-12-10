@@ -26,7 +26,7 @@ from infrastructure.gitlab import (
 from infrastructure.network import network
 from pytest import fixture
 
-from foxops_client.client import FoxOpsClient
+from foxops_client import FoxopsClient
 
 # This variable is never used. We just declare it to mark the imported fixtures as used for linting.
 IMPORTED_FIXTURES = [
@@ -54,12 +54,12 @@ IMPORTED_FIXTURES = [
 
 @fixture
 def foxops_client(foxops_host_url):
-    return FoxOpsClient(foxops_host_url, FOXOPS_STATIC_TOKEN)
+    return FoxopsClient(foxops_host_url, FOXOPS_STATIC_TOKEN)
 
 
 @fixture
 def foxops_client_invalid_token(foxops_host_url):
-    return FoxOpsClient(foxops_host_url, FOXOPS_STATIC_TOKEN + "invalid")
+    return FoxopsClient(foxops_host_url, FOXOPS_STATIC_TOKEN + "invalid")
 
 
 @fixture
