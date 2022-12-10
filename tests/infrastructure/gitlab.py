@@ -1,5 +1,6 @@
 import uuid
 from tempfile import TemporaryDirectory
+from time import sleep
 from urllib.parse import quote
 
 import httpx
@@ -51,8 +52,16 @@ class GitlabContainer(wrappers.Container):
         self.host_port = self.ports[f"{GITLAB_LISTEN_PORT}/tcp"][0]
         self.host_url = f"http://localhost:{self.host_port}"
 
-        response = httpx.get(self.host_url, follow_redirects=True)
-        return response.status_code == 200
+        # we want gitlab to return a 200 several times in a row.
+        # especially in the github runners it can act flaky otherwise.
+        for _ in range(3):
+            response = httpx.get(self.host_url, follow_redirects=True)
+            if response.status_code != 200:
+                return False
+
+            sleep(5)
+
+        return True
 
 
 gitlab_container = container(
@@ -71,7 +80,7 @@ gitlab_container = container(
         "{gitlab_logs_volume.name}": {"bind": "/var/log/gitlab", "mode": "rw"},
     },
     scope="session",
-    timeout=5 * 30,
+    timeout=5 * 60,
     wrapper_class=GitlabContainer,
 )
 
