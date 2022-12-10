@@ -130,7 +130,7 @@ class FoxOpsClient:
                 return IncarnationWithDetails(**resp.json())
             case httpx.codes.NOT_FOUND:
                 raise IncarnationDoesNotExistError(resp.json()["message"])
-            case httpx.codes.BAD_REQUEST | httpx.codes.CONFLICT | httpx.codes.INTERNAL_SERVER_ERROR:
+            case httpx.codes.BAD_REQUEST | httpx.codes.CONFLICT:
                 self.log.error(f"received error from FoxOps API: {resp.status_code} {resp.headers} {resp.text}")
                 raise FoxOpsApiError(resp.json()["message"])
 
@@ -176,7 +176,7 @@ class FoxOpsClient:
                 return True, IncarnationWithDetails(**resp.json())
             case httpx.codes.CREATED:
                 return False, IncarnationWithDetails(**resp.json())
-            case httpx.codes.BAD_REQUEST | httpx.codes.INTERNAL_SERVER_ERROR:
+            case httpx.codes.BAD_REQUEST:
                 self.log.error(f"received error from FoxOps API: {resp.status_code} {resp.headers} {resp.text}")
                 raise FoxOpsApiError(resp.json()["message"])
 
