@@ -15,3 +15,9 @@ poetry run pytest
 # instead, especially during development, it's recommended to keep the Gitlab container running and not terminate it at the end.
 poetry run pytest --reuse-containers
 ```
+
+When you used `--reuse-containers` to run the tests, you can stop all containers, networks, etc. using the following command:
+
+```shell
+make clean
+```
