@@ -61,7 +61,7 @@ jobs:
       - name: Install dependencies
         run: |
           poetry self add "poetry-dynamic-versioning[plugin]"
-          poetry install --only=dev
+          poetry install
 
       - name: mypy
         run: python -m mypy .
