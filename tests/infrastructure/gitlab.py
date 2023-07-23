@@ -80,7 +80,7 @@ gitlab_container = container(
         "{gitlab_logs_volume.name}": {"bind": "/var/log/gitlab", "mode": "rw"},
     },
     scope="session",
-    timeout=5 * 60,
+    timeout=15 * 60,
     wrapper_class=GitlabContainer,
 )
 

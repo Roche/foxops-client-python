@@ -7,7 +7,7 @@ FOXOPS_LISTEN_PORT = "8000/tcp"
 FOXOPS_STATIC_TOKEN = "dummy"
 
 # Images
-foxops_image = fetch(repository="ghcr.io/roche/foxops:e61d4c1e6d7e77bca5df14dfe803030fcb52a0be")
+foxops_image = fetch(repository="ghcr.io/roche/foxops:db2d36a4fae02df57a9559c35ad1256bffae3b4c")
 
 # Volumes
 foxops_secrets_volume = volume(
@@ -39,6 +39,10 @@ foxops_container = container(
         "FOXOPS_GITLAB_ADDRESS": gitlab_docker_network_url,
         "FOXOPS_STATIC_TOKEN": FOXOPS_STATIC_TOKEN,
     },
+    command=[
+        "/bin/bash", "-c",
+        "alembic upgrade head && uvicorn foxops.__main__:create_app --factory --host 0.0.0.0 --port 8000"
+    ],
     volumes={
         "{foxops_secrets_volume.name}": {"bind": "/var/run/secrets/foxops", "mode": "ro"},
     },
