@@ -40,8 +40,9 @@ foxops_container = container(
         "FOXOPS_STATIC_TOKEN": FOXOPS_STATIC_TOKEN,
     },
     command=[
-        "/bin/bash", "-c",
-        "alembic upgrade head && uvicorn foxops.__main__:create_app --factory --host 0.0.0.0 --port 8000"
+        "/bin/bash",
+        "-c",
+        "alembic upgrade head && uvicorn foxops.__main__:create_app --factory --host 0.0.0.0 --port 8000",
     ],
     volumes={
         "{foxops_secrets_volume.name}": {"bind": "/var/run/secrets/foxops", "mode": "ro"},
