@@ -42,28 +42,6 @@ def test_create_incarnation(gitlab_api_client, foxops_client: FoxopsClient, temp
     assert incarnation.template_data == {"input_variable": "foo"}
 
 
-def test_create_incarnation_import_with_existing_incarnation(incarnation, foxops_client: FoxopsClient):
-    # GIVEN
-    foxops_client.delete_incarnation(incarnation.id)
-
-    # WHEN
-    imported, response = foxops_client.create_incarnation(
-        incarnation_repository=incarnation.incarnation_repository,
-        template_repository=incarnation.template_repository,
-        template_repository_version=incarnation.template_repository_version,
-        template_data=incarnation.template_data,
-        allow_import=True,
-    )
-
-    # THEN
-    assert imported is True
-
-    assert response.incarnation_repository == incarnation.incarnation_repository
-    assert response.template_repository == incarnation.template_repository
-    assert response.template_repository_version == "main"
-    assert response.template_data == {"input_variable": "foo"}
-
-
 def test_create_incarnation_with_conflicting_existing_incarnation(incarnation, foxops_client):
     # WHEN
     with pytest.raises(FoxopsApiError) as e:

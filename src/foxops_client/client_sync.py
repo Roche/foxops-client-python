@@ -60,7 +60,6 @@ class FoxopsClient:
         template_data: dict[str, str],
         target_directory: str | None = None,
         automerge: bool | None = None,
-        allow_import: bool | None = None,
     ) -> Tuple[bool, IncarnationWithDetails]:
         return self.loop.run_until_complete(
             self.client.create_incarnation(
@@ -70,6 +69,5 @@ class FoxopsClient:
                 template_data,
                 target_directory=target_directory,
                 automerge=automerge,
-                allow_import=allow_import,
             )
         )

@@ -135,7 +135,6 @@ class AsyncFoxopsClient:
         template_data: dict[str, str],
         target_directory: str | None = None,
         automerge: bool | None = None,
-        allow_import: bool | None = None,
     ) -> Tuple[bool, IncarnationWithDetails]:
         """
         Call the FoxOps API to create a new incarnation.
@@ -155,11 +154,7 @@ class AsyncFoxopsClient:
         if automerge is not None:
             data["automerge"] = automerge
 
-        params = {}
-        if allow_import is not None:
-            params["allow_import"] = allow_import
-
-        resp = await self.retry_function(self.client.post)("/api/incarnations", params=params, json=data)
+        resp = await self.retry_function(self.client.post)("/api/incarnations", json=data)
 
         match resp.status_code:
             case httpx.codes.OK:
