@@ -12,7 +12,6 @@ readme = "README.md"
 python = ">=3.10,<4.0"
 httpx = "^0.23.0"
 tenacity = "^8.0.1"
-pydantic = "^1.9.0"
 structlog = ">=21.2,<23.0"
 
 [tool.poetry.group.dev.dependencies]

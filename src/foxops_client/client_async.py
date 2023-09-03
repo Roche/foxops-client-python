@@ -67,7 +67,7 @@ class AsyncFoxopsClient:
 
         match resp.status_code:
             case httpx.codes.OK:
-                return [Incarnation(**x) for x in resp.json()]
+                return [Incarnation.from_dict(x) for x in resp.json()]
             case httpx.codes.NOT_FOUND:
                 raise IncarnationDoesNotExistError(resp.json()["message"])
 
@@ -79,7 +79,7 @@ class AsyncFoxopsClient:
 
         match resp.status_code:
             case httpx.codes.OK:
-                return IncarnationWithDetails(**resp.json())
+                return IncarnationWithDetails.from_dict(resp.json())
             case httpx.codes.NOT_FOUND:
                 raise IncarnationDoesNotExistError(resp.json()["message"])
 
@@ -117,7 +117,7 @@ class AsyncFoxopsClient:
 
         match resp.status_code:
             case httpx.codes.OK:
-                return IncarnationWithDetails(**resp.json())
+                return IncarnationWithDetails.from_dict(resp.json())
             case httpx.codes.NOT_FOUND:
                 raise IncarnationDoesNotExistError(resp.json()["message"])
             case httpx.codes.BAD_REQUEST | httpx.codes.CONFLICT:
@@ -163,9 +163,9 @@ class AsyncFoxopsClient:
 
         match resp.status_code:
             case httpx.codes.OK:
-                return True, IncarnationWithDetails(**resp.json())
+                return True, IncarnationWithDetails.from_dict(resp.json())
             case httpx.codes.CREATED:
-                return False, IncarnationWithDetails(**resp.json())
+                return False, IncarnationWithDetails.from_dict(resp.json())
             case httpx.codes.BAD_REQUEST:
                 self.log.error(f"received error from FoxOps API: {resp.status_code} {resp.headers} {resp.text}")
                 raise FoxopsApiError(resp.json()["message"])
