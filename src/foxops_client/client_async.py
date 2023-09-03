@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Tuple
+from typing import Any
 
 import httpx
 from httpx import Response
@@ -135,15 +135,7 @@ class AsyncFoxopsClient:
         template_data: dict[str, str],
         target_directory: str | None = None,
         automerge: bool | None = None,
-        allow_import: bool | None = None,
-    ) -> Tuple[bool, IncarnationWithDetails]:
-        """
-        Call the FoxOps API to create a new incarnation.
-
-        Returns a tuple of (imported, incarnation), where imported is a boolean that is True if the incarnation
-        already existed and was added to the foxops inventory. This can only be True if the allow_import parameter
-        is set to True.
-        """
+    ) -> IncarnationWithDetails:
         data: dict[str, Any] = {
             "incarnation_repository": incarnation_repository,
             "template_repository": template_repository,
@@ -155,17 +147,11 @@ class AsyncFoxopsClient:
         if automerge is not None:
             data["automerge"] = automerge
 
-        params = {}
-        if allow_import is not None:
-            params["allow_import"] = allow_import
-
-        resp = await self.retry_function(self.client.post)("/api/incarnations", params=params, json=data)
+        resp = await self.retry_function(self.client.post)("/api/incarnations", json=data)
 
         match resp.status_code:
-            case httpx.codes.OK:
-                return True, IncarnationWithDetails.from_dict(resp.json())
             case httpx.codes.CREATED:
-                return False, IncarnationWithDetails.from_dict(resp.json())
+                return IncarnationWithDetails.from_dict(resp.json())
             case httpx.codes.BAD_REQUEST:
                 self.log.error(f"received error from FoxOps API: {resp.status_code} {resp.headers} {resp.text}")
                 raise FoxopsApiError(resp.json()["message"])

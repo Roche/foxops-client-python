@@ -1,5 +1,4 @@
 import asyncio
-from typing import Tuple
 
 from foxops_client.client_async import AsyncFoxopsClient
 from foxops_client.types import Incarnation, IncarnationWithDetails
@@ -60,8 +59,7 @@ class FoxopsClient:
         template_data: dict[str, str],
         target_directory: str | None = None,
         automerge: bool | None = None,
-        allow_import: bool | None = None,
-    ) -> Tuple[bool, IncarnationWithDetails]:
+    ) -> IncarnationWithDetails:
         return self.loop.run_until_complete(
             self.client.create_incarnation(
                 incarnation_repository,
@@ -70,6 +68,5 @@ class FoxopsClient:
                 template_data,
                 target_directory=target_directory,
                 automerge=automerge,
-                allow_import=allow_import,
             )
         )
