@@ -125,7 +125,7 @@ def create_incarnation(template, gitlab_project_factory, foxops_client):
     template_path = template
     incarnation_path = gitlab_project_factory(return_path=True)
 
-    _, incarnation = foxops_client.create_incarnation(
+    incarnation = foxops_client.create_incarnation(
         incarnation_repository=incarnation_path,
         template_repository=template_path,
         template_repository_version="main",
