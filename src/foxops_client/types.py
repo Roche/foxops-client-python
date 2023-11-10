@@ -2,7 +2,6 @@ from dataclasses import asdict, dataclass
 from enum import Enum
 from typing import Any, Self
 
-
 TemplateData = dict[str, Any]
 
 
