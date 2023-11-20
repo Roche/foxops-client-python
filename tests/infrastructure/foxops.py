@@ -52,6 +52,11 @@ foxops_container = container(
 )
 
 
+@fixture(scope="session", autouse=True)
+def foxops_database_initialization(foxops_container: FoxOpsContainer):
+    foxops_container.exec_run("alembic upgrade head")
+
+
 @fixture(scope="session")
 def foxops_host_port(foxops_container: FoxOpsContainer):
     return foxops_container.ports[FOXOPS_LISTEN_PORT][0]
