@@ -3,6 +3,7 @@ from pathlib import Path
 from infrastructure.foxops import (
     FOXOPS_STATIC_TOKEN,
     foxops_container,
+    foxops_database_initialization,
     foxops_host_port,
     foxops_host_url,
     foxops_image,
@@ -35,6 +36,7 @@ IMPORTED_FIXTURES = [
     foxops_host_url,
     foxops_image,
     foxops_secrets_volume,
+    foxops_database_initialization,
     gitlab_access_token,
     gitlab_access_token_binary,
     gitlab_api_client,
