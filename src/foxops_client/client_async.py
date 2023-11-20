@@ -98,20 +98,47 @@ class AsyncFoxopsClient:
         self._handle_unexpected_response(resp)
         raise ValueError("unexpected response")
 
-    async def update_incarnation(
+    async def patch_incarnation(
         self,
         incarnation_id: int,
         automerge: bool,
-        template_repository_version: str | None = None,
-        template_data: dict[str, str] | None = None,
-    ) -> IncarnationWithDetails:
+        requested_version: str | None = None,
+        requested_data: dict[str, Any] | None = None,
+    ):
         data: dict[str, Any] = {
             "automerge": automerge,
         }
-        if template_repository_version is not None:
-            data["template_repository_version"] = template_repository_version
-        if template_data is not None:
-            data["template_data"] = template_data
+        if requested_version is not None:
+            data["requested_version"] = requested_version
+        if requested_data is not None:
+            data["requested_data"] = requested_data
+
+        resp = await self.retry_function(self.client.patch)(f"/api/incarnations/{incarnation_id}", json=data)
+
+        match resp.status_code:
+            case httpx.codes.OK:
+                return IncarnationWithDetails.from_dict(resp.json())
+            case httpx.codes.NOT_FOUND:
+                raise IncarnationDoesNotExistError(resp.json()["message"])
+            case httpx.codes.BAD_REQUEST | httpx.codes.CONFLICT:
+                self.log.error(f"received error from FoxOps API: {resp.status_code} {resp.headers} {resp.text}")
+                raise FoxopsApiError(resp.json()["message"])
+
+        self._handle_unexpected_response(resp)
+        raise ValueError("unexpected response")
+
+    async def put_incarnation(
+        self,
+        incarnation_id: int,
+        automerge: bool,
+        template_repository_version: str,
+        template_data: dict[str, Any],
+    ) -> IncarnationWithDetails:
+        data: dict[str, Any] = {
+            "automerge": automerge,
+            "template_repository_version": template_repository_version,
+            "template_data": template_data,
+        }
 
         resp = await self.retry_function(self.client.put)(f"/api/incarnations/{incarnation_id}", json=data)
 
@@ -132,7 +159,7 @@ class AsyncFoxopsClient:
         incarnation_repository: str,
         template_repository: str,
         template_repository_version: str,
-        template_data: dict[str, str],
+        template_data: dict[str, Any],
         target_directory: str | None = None,
         automerge: bool | None = None,
     ) -> IncarnationWithDetails:

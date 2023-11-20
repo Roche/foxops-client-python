@@ -100,9 +100,20 @@ def test_list_incarnation_with_non_existing_incarnation(foxops_client):
         foxops_client.list_incarnations(incarnation_repository="nonexisting", target_directory=".")
 
 
-def test_update_incarnation_with_template_data_change_and_no_automerge(incarnation, foxops_client):
+def test_put_incarnation_returns_error_when_variables_are_missing(incarnation, foxops_client):
     # WHEN
-    response = foxops_client.update_incarnation(
+    with pytest.raises(FoxopsApiError):
+        foxops_client.put_incarnation(
+            incarnation_id=incarnation.id,
+            automerge=False,
+            template_repository_version="main",
+            template_data={},
+        )
+
+
+def test_patch_incarnation_with_template_data_change_and_no_automerge(incarnation, foxops_client):
+    # WHEN
+    response = foxops_client.patch_incarnation(
         incarnation_id=incarnation.id,
         automerge=False,
         template_data={"input_variable": "bar"},

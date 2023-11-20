@@ -7,7 +7,7 @@ FOXOPS_LISTEN_PORT = "8000/tcp"
 FOXOPS_STATIC_TOKEN = "dummy"
 
 # Images
-foxops_image = fetch(repository="ghcr.io/roche/foxops:e61d4c1e6d7e77bca5df14dfe803030fcb52a0be")
+foxops_image = fetch(repository="ghcr.io/roche/foxops:v2.3.0")
 
 # Volumes
 foxops_secrets_volume = volume(
