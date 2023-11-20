@@ -13,7 +13,7 @@ foxops_image = fetch(repository="ghcr.io/roche/foxops:v2.3.0")
 foxops_secrets_volume = volume(
     name=f"{NAME_PREFIX}_foxops_secrets",
     initial_content={
-        "foxops_gitlab_token": gitlab_access_token_binary,
+        "foxops_hoster_gitlab_token": gitlab_access_token_binary,
     },
     scope="session",
 )
@@ -36,7 +36,8 @@ foxops_container = container(
     image="{foxops_image.id}",
     name=NAME_PREFIX + "_foxops",
     environment={
-        "FOXOPS_GITLAB_ADDRESS": gitlab_docker_network_url,
+        "FOXOPS_HOSTER_TYPE": "gitlab",
+        "FOXOPS_HOSTER_GITLAB_ADDRESS": gitlab_docker_network_url,
         "FOXOPS_STATIC_TOKEN": FOXOPS_STATIC_TOKEN,
     },
     volumes={
