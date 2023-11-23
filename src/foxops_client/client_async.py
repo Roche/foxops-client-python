@@ -103,7 +103,7 @@ class AsyncFoxopsClient:
         incarnation_id: int,
         automerge: bool,
         requested_version: str | None = None,
-        requested_data: dict[str, Any] | None = None,
+        requested_data: TemplateData | None = None,
     ):
         data: dict[str, Any] = {
             "automerge": automerge,
