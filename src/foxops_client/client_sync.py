@@ -35,22 +35,6 @@ class FoxopsClient:
     def delete_incarnation(self, incarnation_id: int):
         return self.loop.run_until_complete(self.client.delete_incarnation(incarnation_id))
 
-    def put_incarnation(
-        self,
-        incarnation_id: int,
-        automerge: bool,
-        template_repository_version: str,
-        template_data: TemplateData,
-    ) -> IncarnationWithDetails:
-        return self.loop.run_until_complete(
-            self.client.put_incarnation(
-                incarnation_id,
-                automerge,
-                template_repository_version=template_repository_version,
-                template_data=template_data,
-            )
-        )
-
     def patch_incarnation(
         self,
         incarnation_id: int,
@@ -64,6 +48,22 @@ class FoxopsClient:
                 automerge,
                 requested_version=requested_version,
                 requested_data=requested_data,
+            )
+        )
+
+    def put_incarnation(
+        self,
+        incarnation_id: int,
+        automerge: bool,
+        template_repository_version: str,
+        template_data: TemplateData,
+    ) -> IncarnationWithDetails:
+        return self.loop.run_until_complete(
+            self.client.put_incarnation(
+                incarnation_id,
+                automerge,
+                template_repository_version=template_repository_version,
+                template_data=template_data,
             )
         )
 
