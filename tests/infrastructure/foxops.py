@@ -7,7 +7,7 @@ FOXOPS_LISTEN_PORT = "8000/tcp"
 FOXOPS_STATIC_TOKEN = "dummy"
 
 # Images
-foxops_image = fetch(repository="ghcr.io/roche/foxops:v2.3.0")
+foxops_image = fetch(repository="ghcr.io/roche/foxops:v2.3.1")
 
 # Volumes
 foxops_secrets_volume = volume(
@@ -54,6 +54,7 @@ foxops_container = container(
 
 @fixture(scope="session", autouse=True)
 def foxops_database_initialization(foxops_container: FoxOpsContainer):
+    foxops_container.exec_run("rm /home/foxops/test.db")
     foxops_container.exec_run("alembic upgrade head")
 
 

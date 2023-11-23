@@ -36,7 +36,7 @@ class FoxopsClient:
     def delete_incarnation(self, incarnation_id: int):
         return self.loop.run_until_complete(self.client.delete_incarnation(incarnation_id))
 
-    async def patch_incarnation(
+    def patch_incarnation(
         self,
         incarnation_id: int,
         automerge: bool,

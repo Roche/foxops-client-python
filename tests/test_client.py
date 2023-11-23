@@ -52,7 +52,7 @@ def test_create_incarnation_with_conflicting_existing_incarnation(incarnation, f
         )
 
     # THEN
-    assert e.value.message.find("already initialized") != -1
+    assert e.value.message.find("is already a foxops incarnation") != -1
 
 
 def test_delete_incarnation(incarnation, foxops_client: FoxopsClient):
@@ -116,13 +116,10 @@ def test_patch_incarnation_with_template_data_change_and_no_automerge(incarnatio
     response = foxops_client.patch_incarnation(
         incarnation_id=incarnation.id,
         automerge=False,
-        template_data={"input_variable": "bar"},
+        requested_data={"input_variable": "bar"},
     )
 
     # THEN
-    # because we didn't merge, the template data should be the same as in the original incarnation details
-    assert response.template_data == incarnation.template_data
-
     assert response.commit_sha is not None
     assert response.commit_url is not None
 

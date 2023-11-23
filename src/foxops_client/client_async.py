@@ -179,7 +179,7 @@ class AsyncFoxopsClient:
         match resp.status_code:
             case httpx.codes.CREATED:
                 return IncarnationWithDetails.from_dict(resp.json())
-            case httpx.codes.BAD_REQUEST:
+            case httpx.codes.BAD_REQUEST | httpx.codes.CONFLICT:
                 self.log.error(f"received error from FoxOps API: {resp.status_code} {resp.headers} {resp.text}")
                 raise FoxopsApiError(resp.json()["message"])
 
