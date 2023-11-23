@@ -67,23 +67,6 @@ class FoxopsClient:
             )
         )
 
-    def update_incarnation(
-        self,
-        incarnation_id: int,
-        automerge: bool,
-        template_repository_version: str,
-        template_data: TemplateData,
-    ) -> IncarnationWithDetails:
-        """DEPRECATED! use put_incarnation instead"""
-        return self.loop.run_until_complete(
-            self.client.put_incarnation(
-                incarnation_id,
-                automerge,
-                template_repository_version=template_repository_version,
-                template_data=template_data,
-            )
-        )
-
     def create_incarnation(
         self,
         incarnation_repository: str,

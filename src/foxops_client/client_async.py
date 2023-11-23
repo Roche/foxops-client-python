@@ -154,22 +154,6 @@ class AsyncFoxopsClient:
         self._handle_unexpected_response(resp)
         raise ValueError("unexpected response")
 
-    async def update_incarnation(
-        self,
-        incarnation_id: int,
-        automerge: bool,
-        template_repository_version: str,
-        template_data: TemplateData,
-    ) -> IncarnationWithDetails:
-        """DEPRECATED! use put_incarnation instead"""
-
-        return await self.put_incarnation(
-            incarnation_id,
-            automerge,
-            template_repository_version=template_repository_version,
-            template_data=template_data,
-        )
-
     async def create_incarnation(
         self,
         incarnation_repository: str,
