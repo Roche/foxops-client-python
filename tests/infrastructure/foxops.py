@@ -7,13 +7,13 @@ FOXOPS_LISTEN_PORT = "8000/tcp"
 FOXOPS_STATIC_TOKEN = "dummy"
 
 # Images
-foxops_image = fetch(repository="ghcr.io/roche/foxops:e61d4c1e6d7e77bca5df14dfe803030fcb52a0be")
+foxops_image = fetch(repository="ghcr.io/roche/foxops:v2.3.1")
 
 # Volumes
 foxops_secrets_volume = volume(
     name=f"{NAME_PREFIX}_foxops_secrets",
     initial_content={
-        "foxops_gitlab_token": gitlab_access_token_binary,
+        "foxops_hoster_gitlab_token": gitlab_access_token_binary,
     },
     scope="session",
 )
@@ -36,7 +36,8 @@ foxops_container = container(
     image="{foxops_image.id}",
     name=NAME_PREFIX + "_foxops",
     environment={
-        "FOXOPS_GITLAB_ADDRESS": gitlab_docker_network_url,
+        "FOXOPS_HOSTER_TYPE": "gitlab",
+        "FOXOPS_HOSTER_GITLAB_ADDRESS": gitlab_docker_network_url,
         "FOXOPS_STATIC_TOKEN": FOXOPS_STATIC_TOKEN,
     },
     volumes={
@@ -49,6 +50,12 @@ foxops_container = container(
     scope="session",
     wrapper_class=FoxOpsContainer,
 )
+
+
+@fixture(scope="session", autouse=True)
+def foxops_database_initialization(foxops_container: FoxOpsContainer):
+    foxops_container.exec_run("rm /home/foxops/test.db")
+    foxops_container.exec_run("alembic upgrade head")
 
 
 @fixture(scope="session")

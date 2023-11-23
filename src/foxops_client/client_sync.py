@@ -1,4 +1,5 @@
 import asyncio
+from typing import Any
 
 from foxops_client.client_async import AsyncFoxopsClient
 from foxops_client.types import Incarnation, IncarnationWithDetails
@@ -35,15 +36,31 @@ class FoxopsClient:
     def delete_incarnation(self, incarnation_id: int):
         return self.loop.run_until_complete(self.client.delete_incarnation(incarnation_id))
 
-    def update_incarnation(
+    def patch_incarnation(
         self,
         incarnation_id: int,
         automerge: bool,
-        template_repository_version: str | None = None,
-        template_data: dict[str, str] | None = None,
+        requested_version: str | None = None,
+        requested_data: dict[str, Any] | None = None,
+    ):
+        return self.loop.run_until_complete(
+            self.client.patch_incarnation(
+                incarnation_id,
+                automerge,
+                requested_version=requested_version,
+                requested_data=requested_data,
+            )
+        )
+
+    def put_incarnation(
+        self,
+        incarnation_id: int,
+        automerge: bool,
+        template_repository_version: str,
+        template_data: dict[str, Any],
     ) -> IncarnationWithDetails:
         return self.loop.run_until_complete(
-            self.client.update_incarnation(
+            self.client.put_incarnation(
                 incarnation_id,
                 automerge,
                 template_repository_version=template_repository_version,
@@ -56,7 +73,7 @@ class FoxopsClient:
         incarnation_repository: str,
         template_repository: str,
         template_repository_version: str,
-        template_data: dict[str, str],
+        template_data: dict[str, Any],
         target_directory: str | None = None,
         automerge: bool | None = None,
     ) -> IncarnationWithDetails:

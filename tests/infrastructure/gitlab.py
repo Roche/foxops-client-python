@@ -54,7 +54,7 @@ class GitlabContainer(wrappers.Container):
 
         # we want gitlab to return a 200 several times in a row.
         # especially in the github runners it can act flaky otherwise.
-        for _ in range(3):
+        for _ in range(15):
             response = httpx.get(self.host_url, follow_redirects=True)
             if response.status_code != 200:
                 return False
