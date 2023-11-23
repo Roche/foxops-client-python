@@ -1,8 +1,7 @@
 import asyncio
-from typing import Any
 
 from foxops_client.client_async import AsyncFoxopsClient
-from foxops_client.types import Incarnation, IncarnationWithDetails
+from foxops_client.types import Incarnation, IncarnationWithDetails, TemplateData
 
 
 class FoxopsClient:
@@ -41,7 +40,7 @@ class FoxopsClient:
         incarnation_id: int,
         automerge: bool,
         requested_version: str | None = None,
-        requested_data: dict[str, Any] | None = None,
+        requested_data: TemplateData | None = None,
     ):
         return self.loop.run_until_complete(
             self.client.patch_incarnation(
@@ -57,7 +56,7 @@ class FoxopsClient:
         incarnation_id: int,
         automerge: bool,
         template_repository_version: str,
-        template_data: dict[str, Any],
+        template_data: TemplateData,
     ) -> IncarnationWithDetails:
         return self.loop.run_until_complete(
             self.client.put_incarnation(
@@ -73,7 +72,7 @@ class FoxopsClient:
         incarnation_repository: str,
         template_repository: str,
         template_repository_version: str,
-        template_data: dict[str, Any],
+        template_data: TemplateData,
         target_directory: str | None = None,
         automerge: bool | None = None,
     ) -> IncarnationWithDetails:

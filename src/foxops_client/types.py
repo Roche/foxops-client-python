@@ -2,6 +2,8 @@ from dataclasses import asdict, dataclass
 from enum import Enum
 from typing import Any, Self
 
+TemplateData = dict[str, Any]
+
 
 class MergeRequestStatus(Enum):
     OPEN = "open"
@@ -42,7 +44,8 @@ class IncarnationWithDetails(Incarnation):
     template_repository: str | None
     template_repository_version: str | None
     template_repository_version_hash: str | None
-    template_data: dict[str, Any] | None
+    template_data: TemplateData | None
+    template_data_full: TemplateData | None
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Self:
@@ -56,5 +59,6 @@ class IncarnationWithDetails(Incarnation):
             template_repository_version=data["template_repository_version"],
             template_repository_version_hash=data["template_repository_version_hash"],
             template_data=data["template_data"],
+            template_data_full=data["template_data_full"],
             **asdict(Incarnation.from_dict(data)),
         )

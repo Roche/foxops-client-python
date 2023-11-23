@@ -10,7 +10,7 @@ from foxops_client.exceptions import (
     IncarnationDoesNotExistError,
 )
 from foxops_client.retries import default_retry
-from foxops_client.types import Incarnation, IncarnationWithDetails
+from foxops_client.types import Incarnation, IncarnationWithDetails, TemplateData
 
 
 class AsyncFoxopsClient:
@@ -103,7 +103,7 @@ class AsyncFoxopsClient:
         incarnation_id: int,
         automerge: bool,
         requested_version: str | None = None,
-        requested_data: dict[str, Any] | None = None,
+        requested_data: TemplateData | None = None,
     ):
         data: dict[str, Any] = {
             "automerge": automerge,
@@ -132,15 +132,15 @@ class AsyncFoxopsClient:
         incarnation_id: int,
         automerge: bool,
         template_repository_version: str,
-        template_data: dict[str, Any],
+        template_data: TemplateData,
     ) -> IncarnationWithDetails:
-        data: dict[str, Any] = {
+        request: dict[str, Any] = {
             "automerge": automerge,
             "template_repository_version": template_repository_version,
             "template_data": template_data,
         }
 
-        resp = await self.retry_function(self.client.put)(f"/api/incarnations/{incarnation_id}", json=data)
+        resp = await self.retry_function(self.client.put)(f"/api/incarnations/{incarnation_id}", json=request)
 
         match resp.status_code:
             case httpx.codes.OK:
@@ -159,7 +159,7 @@ class AsyncFoxopsClient:
         incarnation_repository: str,
         template_repository: str,
         template_repository_version: str,
-        template_data: dict[str, Any],
+        template_data: TemplateData,
         target_directory: str | None = None,
         automerge: bool | None = None,
     ) -> IncarnationWithDetails:
