@@ -18,7 +18,7 @@ structlog = "^23.1.0"
 # Linting
 black = "^23.7.0"
 flake8 = "^6.1.0"
-flake8-bugbear = "^23.7.10"
+flake8-bugbear = ">=23.7.10,<25.0.0"
 isort = "^5.9.3"
 
 # Testing
