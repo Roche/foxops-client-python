@@ -101,28 +101,10 @@ jobs:
 
       - name: Debug coverage files
         run: |
-          echo "Current directory: $(pwd)"
-          echo "All files in current directory:"
-          ls -la
-          echo "Looking specifically for coverage files:"
-          find . -name ".coverage*" -type f 2>/dev/null || echo "No .coverage files found anywhere"
-          echo "Checking if .coverage exists:"
-          if [ -f .coverage ]; then
-            echo ".coverage file exists, size: $(stat -c%s .coverage)"
-          else
-            echo ".coverage file does not exist"
-          fi
-
-      - name: Move coverage file if needed
-        run: |
-          if [ -f .coverage ]; then
-            echo "Moving .coverage to .coverage.${{ matrix.python-version }}"
-            mv .coverage .coverage.${{ matrix.python-version }}
-            echo "Move completed"
-            ls -la .coverage.${{ matrix.python-version }}
-          else
-            echo "No .coverage file to move"
-          fi
+          echo "Looking for coverage files:"
+          ls -la .coverage* || echo "No .coverage files found"
+          echo "Coverage file that should exist: .coverage.${{ matrix.python-version }}"
+          test -f .coverage.${{ matrix.python-version }} && echo "Coverage file exists and is $(stat -c%s .coverage.${{ matrix.python-version }}) bytes" || echo "Coverage file does not exist"
 
       - name: Upload coverage data
         uses: actions/upload-artifact@v4
