@@ -115,12 +115,15 @@ jobs:
           stat .coverage.${{ matrix.python-version }} || echo "File vanished!"
           echo "Working directory contents:"
           ls -la
+          echo "Current path:"
+          pwd
 
       - name: Upload coverage data
         uses: actions/upload-artifact@v4
         with:
           name: coverage-data-${{ matrix.python-version }}
-          path: ${{ github.workspace }}/.coverage.${{ matrix.python-version }}
+          path: .coverage.${{ matrix.python-version }}
+          include-hidden-files: true
           if-no-files-found: warn
 
   coverage:
