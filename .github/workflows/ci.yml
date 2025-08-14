@@ -97,13 +97,21 @@ jobs:
       - run: poetry run pytest --cov=foxops_client
         env:
           COVERAGE_FILE: .coverage.${{ matrix.python-version }}
+      - name: Debug coverage files
+        run: |
+          echo "Looking for coverage files:"
+          ls -la .coverage* || echo "No .coverage files found"
+          echo "Current directory contents:"
+          ls -la
+          echo "Coverage file that should exist: .coverage.${{ matrix.python-version }}"
+          test -f .coverage.${{ matrix.python-version }} && echo "Coverage file exists" || echo "Coverage file does not exist"
 
       - name: Upload coverage data
         uses: actions/upload-artifact@v4
         with:
           name: coverage-data-${{ matrix.python-version }}
           path: .coverage.${{ matrix.python-version }}
-          if-no-files-found: ignore
+          if-no-files-found: warn
 
 
   coverage:
@@ -119,7 +127,7 @@ jobs:
       - run: python -m pip install --upgrade coverage[toml]
       - uses: actions/download-artifact@v4
         with:
-          pattern: coverage-data-*
+          pattern: "*"
           merge-multiple: true
       - name: Combine coverage & fail if it's <70%.
         run: |
