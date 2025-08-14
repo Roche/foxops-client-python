@@ -106,6 +106,16 @@ jobs:
           echo "Coverage file that should exist: .coverage.${{ matrix.python-version }}"
           test -f .coverage.${{ matrix.python-version }} && echo "Coverage file exists and is $(stat -c%s .coverage.${{ matrix.python-version }}) bytes" || echo "Coverage file does not exist"
 
+      - name: Final debug before upload
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "Files right before upload:"
+          ls -la .coverage*
+          echo "File info:"
+          stat .coverage.${{ matrix.python-version }} || echo "File vanished!"
+          echo "Working directory contents:"
+          ls -la
+
       - name: Upload coverage data
         uses: actions/upload-artifact@v4
         with:
