@@ -94,9 +94,11 @@ jobs:
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
 
-      - run: poetry run pytest --cov=foxops_client
+      - name: Run tests with coverage
+        run: poetry run pytest --cov=foxops_client --cov-report=term --cov-config=pyproject.toml
         env:
           COVERAGE_FILE: .coverage.${{ matrix.python-version }}
+
       - name: Debug coverage files
         run: |
           echo "Looking for coverage files:"
@@ -106,13 +108,19 @@ jobs:
           echo "Coverage file that should exist: .coverage.${{ matrix.python-version }}"
           test -f .coverage.${{ matrix.python-version }} && echo "Coverage file exists" || echo "Coverage file does not exist"
 
+      - name: Move coverage file if needed
+        run: |
+          if [ -f .coverage ]; then
+            mv .coverage .coverage.${{ matrix.python-version }}
+            echo "Moved .coverage to .coverage.${{ matrix.python-version }}"
+          fi
+
       - name: Upload coverage data
         uses: actions/upload-artifact@v4
         with:
           name: coverage-data-${{ matrix.python-version }}
           path: .coverage.${{ matrix.python-version }}
           if-no-files-found: warn
-
 
   coverage:
     name: Combine & check coverage
