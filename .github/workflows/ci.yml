@@ -33,6 +33,7 @@ jobs:
           virtualenvs-create: true
       - name: Install dependencies
         run: |
+          pip install setuptools
           poetry self add "poetry-dynamic-versioning[plugin]"
           poetry install --only=dev
 
@@ -60,6 +61,7 @@ jobs:
           virtualenvs-create: true
       - name: Install dependencies
         run: |
+          pip install setuptools
           poetry self add "poetry-dynamic-versioning[plugin]"
           poetry install
 
@@ -86,6 +88,7 @@ jobs:
           virtualenvs-create: true
       - name: Install dependencies
         run: |
+          pip install setuptools
           poetry self add "poetry-dynamic-versioning[plugin]"
           poetry install
 
