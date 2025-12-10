@@ -53,14 +53,13 @@ jobs:
           python-version: ${{ env.PYTHON_LATEST }}
       - uses: snok/install-poetry@v1
         with:
-          version: 2.1.1 # CHANGED: Updated from 1.3.0 to match other jobs
+          version: 2.1.1
           virtualenvs-create: true
       - name: Install dependencies
         run: |
           pip install setuptools
           poetry install
 
-      # CHANGED: Use 'poetry run' so it finds the installed types
       - name: mypy
         run: poetry run python -m mypy .
 
