@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  FORCE_COLOR: "1"  # Make tools pretty.
+  FORCE_COLOR: "1"
   PYTHON_LATEST: "3.13"
 
 jobs:
@@ -15,12 +15,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_LATEST }}
+
       - uses: snok/install-poetry@v1
         with:
           version: 2.1.1
+          plugins: "poetry-dynamic-versioning[plugin]"
+
       - name: Install dependencies
         run: |
           pip install setuptools

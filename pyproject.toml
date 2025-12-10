@@ -38,7 +38,7 @@ line-length = 120
 profile = "black"
 
 [tool.poetry-dynamic-versioning]
-enable = false
+enable = true
 vcs = "git"
 style = "pep440"
 
@@ -50,5 +50,5 @@ module = "pytest_docker_tools"
 ignore_missing_imports = true
 
 [build-system]
-requires = ["poetry-core>=2.1.1", "wheel"]
-build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=2.1.1", "wheel", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
+build-backend = "poetry_dynamic_versioning.backend"
