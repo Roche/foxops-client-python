@@ -1,6 +1,5 @@
 [tool.poetry]
 name = "foxops-client"
-# managed by poetry-dynamic-versioning, do not change.
 version = "0.0.0"
 description = "Foxops API Client"
 authors = [
@@ -39,7 +38,7 @@ line-length = 120
 profile = "black"
 
 [tool.poetry-dynamic-versioning]
-enable = true
+enable = false
 vcs = "git"
 style = "pep440"
 
@@ -51,5 +50,5 @@ module = "pytest_docker_tools"
 ignore_missing_imports = true
 
 [build-system]
-requires = ["poetry-core>=2.1.1", "wheel", "poetry-dynamic-versioning>=0.13.1"]
+requires = ["poetry-core>=2.1.1", "wheel"]
 build-backend = "poetry.core.masonry.api"

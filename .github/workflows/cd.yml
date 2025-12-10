@@ -24,7 +24,6 @@ jobs:
       - name: Install dependencies
         run: |
           pip install setuptools
-          poetry self add "poetry-dynamic-versioning[plugin]>=1.4.1"
 
       - run: poetry build
 
