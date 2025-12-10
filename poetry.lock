@@ -797,7 +797,7 @@ name = "tenacity"
 version = "9.1.2"
 description = "Retry code until it succeeds"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.9"
 groups = ["main"]
 files = [
     {file = "tenacity-9.1.2-py3-none-any.whl", hash = "sha256:f77bf36710d8b73a50b2dd155c97b870017ad21afe6ab300326b0371b3b05138"},
@@ -858,4 +858,4 @@ test = ["websockets"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<3.14"
-content-hash = "9112bf18b7bf93ea87402f986d2f4c8d5825ce9b52d954357429ed187265be46"
+content-hash = "13c4d6f1937da27589f6b6134b1d4b6b7c05a7e39d8bb53f92137a65c243875a"
