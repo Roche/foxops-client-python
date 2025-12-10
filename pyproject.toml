@@ -9,8 +9,8 @@ authors = [
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.11,<4.0"
-httpx = "^0.24.1"
+python = ">=3.13,<3.14"
+httpx = "^0.28.1"
 tenacity = "^8.0.1"
 structlog = "^23.1.0"
 
