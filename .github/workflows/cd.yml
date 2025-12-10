@@ -8,7 +8,7 @@ on:
 
 env:
   FORCE_COLOR: "1"  # Make tools pretty.
-  PYTHON_LATEST: "3.11"
+  PYTHON_LATEST: "3.13"
 
 jobs:
   deploy-pypi:
