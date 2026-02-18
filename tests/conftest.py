@@ -74,14 +74,12 @@ def template(gitlab_api_client, locally_cloned_gitlab_project):
     (Path(root_dir) / "template").mkdir()
 
     (Path(root_dir) / "template" / "README.md").write_text("{{ input_variable }}")
-    (Path(root_dir) / "fengine.yaml").write_text(
-        """
+    (Path(root_dir) / "fengine.yaml").write_text("""
 variables:
   input_variable:
     type: string
     description: dummy input variable
-"""
-    )
+""")
 
     repo.git.add(".")
     repo.git.commit("-m", "Initial commit")
