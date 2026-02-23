@@ -18,7 +18,7 @@ structlog = "^25.5.0"
 black = "^26.1.0"
 flake8 = "^7.3.0"
 flake8-bugbear = "^25.11.29"
-isort = "^5.12.0"
+isort = ">=5.12,<9.0"
 
 # Testing
 pytest = "^9.0.2"
